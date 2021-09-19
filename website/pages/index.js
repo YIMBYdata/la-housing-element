@@ -9,6 +9,7 @@ import { useMemo, useRef, useState, useCallback } from 'react'
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
 import {GeoJsonLayer} from '@deck.gl/layers';
+import {MVTLayer} from '@deck.gl/geo-layers';
 import {_MapContext as MapContext} from 'react-map-gl';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoic2lkLWthcCIsImEiOiJjamRpNzU2ZTMxNWE0MzJtZjAxbnphMW5mIn0.b6m4jgFhPOPOYOoaNGmogQ'
@@ -20,7 +21,10 @@ const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoic2lkLWthcCIsImEiOiJjamRpNzU2ZTMxNWE0MzJt
 const INITIAL_VIEW_STATE = {
   longitude: -118.2467693,
   latitude: 34.040713,
-  zoom: 10,
+  zoom: 12,
+  // Our tiles only exist between zoom 12 and 22
+  minZoom: 12,
+  maxZoom: 22,
   pitch: 0,
   bearing: 0
 };
@@ -64,7 +68,7 @@ function getText (object) {
 }
 
 export default function Home() {
-  const [viewState, setViewState] = useState({zoom: 10})
+  const [viewState, setViewState] = useState({zoom: 12})
 
   const handleViewStateChange = useCallback(({viewState: nextViewState}) => {
     setViewState(nextViewState)
@@ -79,14 +83,14 @@ export default function Home() {
         onViewStateChange={handleViewStateChange}
         >
           <StaticMap mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
-          <GeoJsonLayer
-              id='sites'
-              data='/out_smallest.geojson'
-              filled={true}
-              opacity={0.3}
-              getFillColor={getFillColor}
-              pickable={true}
-              />
+          <MVTLayer
+            data={`https://a.tiles.mapbox.com/v4/sid-kap.7z5xjc4r/{z}/{x}/{y}.vector.pbf?access_token=${MAPBOX_ACCESS_TOKEN}`}
+            filled={true}
+            opacity={0.3}
+            getFillColor={getFillColor}
+            pickable={true}
+            binary={true}
+          />
           <GeoJsonLayer
             id='sites-text'
             data='/points_smallest.geojson'
