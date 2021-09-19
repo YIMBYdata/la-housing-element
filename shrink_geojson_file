@@ -1,0 +1,7 @@
+# reduce shape precision to 5 decimal places, simplify shapes to reduce size
+ogr2ogr -f geojson -lco COORDINATE_PRECISION=5 -simplify 0.00001 out_smaller.geojson out.geojson
+ogr2ogr -f geojson -lco COORDINATE_PRECISION=5 points_smaller.geojson points.geojson
+
+# remove whitespace
+jj -u -i out_smaller.geojson -o out_smallest.geojson
+jj -u -i points_smaller.geojson -o points_smallest.geojson
