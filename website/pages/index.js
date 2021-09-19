@@ -8,7 +8,6 @@ import styles from '../styles/Home.module.css'
 import { useMemo, useRef, useState, useCallback } from 'react'
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
-import {GeoJsonLayer} from '@deck.gl/layers';
 import {MVTLayer} from '@deck.gl/geo-layers';
 import {_MapContext as MapContext} from 'react-map-gl';
 
@@ -84,6 +83,7 @@ export default function Home() {
         >
           <StaticMap mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           <MVTLayer
+            id='shapes'
             data={`https://a.tiles.mapbox.com/v4/sid-kap.7z5xjc4r/{z}/{x}/{y}.vector.pbf?access_token=${MAPBOX_ACCESS_TOKEN}`}
             filled={true}
             opacity={0.3}
@@ -91,9 +91,9 @@ export default function Home() {
             pickable={true}
             binary={true}
           />
-          <GeoJsonLayer
-            id='sites-text'
-            data='/points_smallest.geojson'
+          <MVTLayer
+            id='labels'
+            data={`https://a.tiles.mapbox.com/v4/sid-kap.d6xrhzce/{z}/{x}/{y}.vector.pbf?access_token=${MAPBOX_ACCESS_TOKEN}`}
             filled={false}
             stroked={false}
             getPosition={d => d.coordinates}
