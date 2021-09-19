@@ -89,7 +89,7 @@ export default function Home() {
               />
           <GeoJsonLayer
             id='sites-text'
-            data='/points_smaller.geojson'
+            data='/points_smallest.geojson'
             filled={false}
             stroked={false}
             getPosition={d => d.coordinates}
