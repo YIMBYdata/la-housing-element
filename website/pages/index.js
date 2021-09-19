@@ -39,6 +39,7 @@ function getTooltip({object}) {
     return {
       html: `
        <p>Current zoning: ${properties["zoning"]}</p>
+       <p>Existing units: ${properties["existing_units"]}</p>
        <p>Proposed units: ${properties["units"]}</p>
        <p>Proposed density: ${properties["density"]} units/acre</p>
       `,
