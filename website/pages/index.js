@@ -80,7 +80,7 @@ function getFillColor (object) {
 }
 
 function getText (object) {
-  return object.properties["units"]?.toString()
+  return object.properties["units"]?.toString() || parseFloat(object.properties["realistic_capacity"]).toFixed(1)
 }
 
 export default function Home() {
