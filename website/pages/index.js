@@ -1,10 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-// import ReactMapboxGl, { Layer, Source, Popup, MapContext } from 'react-mapbox-gl'
-// import { LngLat } from 'mapbox-gl'
-// import 'mapbox-gl/dist/mapbox-gl.css'
-
 import { useMemo, useRef, useState, useCallback } from 'react'
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
@@ -12,10 +8,6 @@ import {MVTLayer} from '@deck.gl/geo-layers';
 import {_MapContext as MapContext} from 'react-map-gl';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoic2lkLWthcCIsImEiOiJjamRpNzU2ZTMxNWE0MzJtZjAxbnphMW5mIn0.b6m4jgFhPOPOYOoaNGmogQ'
-
-// const Map = ReactMapboxGl({
-//   accessToken: MAPBOX_ACCESS_TOKEN
-// })
 
 const INITIAL_VIEW_STATE = {
   longitude: -118.2467693,
