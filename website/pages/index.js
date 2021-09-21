@@ -36,13 +36,25 @@ const laBounds = [
 function getTooltip({object}) {
   if (object) {
     const properties = object.properties
+    const noMax = object.properties.no_max_density
+
+    const part1 = `
+      <p>Current zoning: ${properties["zoning"]}</p>
+      <p>Existing units: ${properties["existing_units"]}</p>
+    `
+    const part2 = noMax ? `
+      <p>Proposed units: No max density</p>
+      <p>Proposed density: No max density</p>
+    ` : `
+      <p>Proposed units: ${properties["units"]}</p>
+      <p>Proposed density: ${properties["density"]} units/acre</p>
+    `
+
+    const part3 = `
+      <p>Estimated realistic capacity: ${parseFloat(properties["realistic_capacity"]).toFixed(3)} units</p>
+    `
     return {
-      html: `
-       <p>Current zoning: ${properties["zoning"]}</p>
-       <p>Existing units: ${properties["existing_units"]}</p>
-       <p>Proposed units: ${properties["units"]}</p>
-       <p>Proposed density: ${properties["density"]} units/acre</p>
-      `,
+      html: part1 + part2 + part3,
       style: {
         'background-color': 'white',
         color: 'gray',
@@ -54,9 +66,10 @@ function getTooltip({object}) {
 }
 
 function getFillColor (object) {
+  const noMaxDensity = object.properties.no_max_density
   const density = object.properties["density"]
   const densityFraction = Math.min(density / 200, 1)
-  return [
+  return noMaxDensity ? [0, 255, 0] : [
     (1 - densityFraction) * 255,
     (1 - densityFraction) * 255,
     240,
