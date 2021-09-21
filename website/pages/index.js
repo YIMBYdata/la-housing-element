@@ -38,7 +38,10 @@ function getTooltip({object}) {
     const properties = object.properties
     const noMax = object.properties.no_max_density
 
+    const address = (properties["address"] === "0 ") ? "No address" : properties["address"]
+
     const part1 = `
+      <p><b>${address}</b> (PIN: ${properties["PIN"]})</p>
       <p>Current zoning: ${properties["zoning"]}</p>
       <p>Existing units: ${properties["existing_units"]}</p>
     `
