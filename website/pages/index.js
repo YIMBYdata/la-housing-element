@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+// import styles from '../styles/Home.module.css'
 
 import { useMemo, useRef, useState, useCallback } from 'react'
 import DeckGL from '@deck.gl/react';
@@ -53,8 +53,8 @@ function getTooltip({object}) {
       style: {
         'background-color': 'white',
         color: 'gray',
-        'line-height': '1em',
-        'font-size': '0.8em',
+        'line-height': '1.5em',
+        'font-size': '1em',
       }
     }
   }
@@ -71,8 +71,14 @@ function getFillColor (object) {
   ]
 }
 
-function getText (object) {
-  return object.properties["units"]?.toString() || parseFloat(object.properties["realistic_capacity"]).toFixed(1)
+function getText (object, labelType) {
+  if (labelType === 'max_density') {
+      return object.properties['no_max_density'] ? '' : object.properties["units"].toFixed(1).toString()
+  } else if (labelType == 'realistic_capacity') {
+      return parseFloat(object.properties["realistic_capacity"]).toFixed(1)
+  } else {
+    throw `Unknown labelType ${labelType}`
+  }
 }
 
 export default function Home() {
@@ -81,6 +87,8 @@ export default function Home() {
   const handleViewStateChange = useCallback(({viewState: nextViewState}) => {
     setViewState(nextViewState)
   }, [viewState])
+
+  const [labelType, setLabelType] = useState('max_density')
 
   const deckGlMap = (
       <DeckGL
@@ -107,7 +115,10 @@ export default function Home() {
             stroked={false}
             getPosition={d => d.coordinates}
             pointType='text'
-            getText={getText}
+            getText={d => getText(d, labelType)}
+            updateTriggers={{
+              getText: labelType
+            }}
             visible={viewState.zoom >= 16}
             textSizeUnits='meters'
             textSizeScale={0.25}
@@ -117,14 +128,24 @@ export default function Home() {
   )
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Los Angeles Draft Housing Element - New Sites</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-      {deckGlMap}
+      <main className='container mx-auto h-screen'>
+      <h1 className='text-4xl text-center m-2'>Los Angeles Draft Housing Element</h1>
+      <div className='relative h-5/6 my-4'>
+        {deckGlMap}
+      </div>
+      <div className='mx-auto text-center'>
+      <span className='mr-3 text-gray-500 text-sm'>Label type:</span>
+      <input type='radio' checked={labelType == 'max_density'} onChange={() => setLabelType('max_density')} id='max_density' />
+        <label htmlFor='max_density' className='ml-1 mr-3'>Max allowed units</label>
+        <input type='radio' checked={labelType == 'realistic_capacity'} onChange={() => setLabelType('realistic_capacity')} id='realistic_capacity' />
+        <label htmlFor='realistic_capacity' className='ml-1 mr-3'>Realistic capacity</label>
+      </div>
       </main>
     </div>
   )

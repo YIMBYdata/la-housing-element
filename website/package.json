@@ -17,6 +17,9 @@
     "react-map-gl": "^6.1.17"
   },
   "devDependencies": {
-    "@mapbox/geojsonhint": "^3.0.1"
+    "@mapbox/geojsonhint": "^3.0.1",
+    "autoprefixer": "^10.3.4",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.15"
   }
 }
