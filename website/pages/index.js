@@ -71,14 +71,12 @@ function getFillColor (object) {
   ]
 }
 
-function getText (object, labelType) {
-  if (labelType === 'max_density') {
-      return object.properties['no_max_density'] ? '' : object.properties["units"].toFixed(1).toString()
-  } else if (labelType == 'realistic_capacity') {
-      return parseFloat(object.properties["realistic_capacity"]).toFixed(1)
-  } else {
-    throw `Unknown labelType ${labelType}`
-  }
+function getMaxDensityText (object) {
+  return object.properties['no_max_density'] ? '' : object.properties["units"].toFixed(1).toString()
+}
+
+function getRealisticCapacityText (object) {
+  return parseFloat(object.properties["realistic_capacity"]).toFixed(1)
 }
 
 export default function Home() {
@@ -109,17 +107,27 @@ export default function Home() {
             binary={true}
           />
           <MVTLayer
-            id='labels'
+            id='labels-max-density'
             data={`https://a.tiles.mapbox.com/v4/sid-kap.d6xrhzce/{z}/{x}/{y}.vector.pbf?access_token=${MAPBOX_ACCESS_TOKEN}`}
             filled={false}
             stroked={false}
             getPosition={d => d.coordinates}
             pointType='text'
-            getText={d => getText(d, labelType)}
-            updateTriggers={{
-              getText: labelType
-            }}
-            visible={viewState.zoom >= 16}
+            getText={getMaxDensityText}
+            visible={(viewState.zoom >= 16) && (labelType == 'max_density')}
+            textSizeUnits='meters'
+            textSizeScale={0.25}
+            textFontFamily='sans-serif'
+          />
+          <MVTLayer
+            id='labels-realistic-capacity'
+            data={`https://a.tiles.mapbox.com/v4/sid-kap.d6xrhzce/{z}/{x}/{y}.vector.pbf?access_token=${MAPBOX_ACCESS_TOKEN}`}
+            filled={false}
+            stroked={false}
+            getPosition={d => d.coordinates}
+            pointType='text'
+            getText={getRealisticCapacityText}
+            visible={(viewState.zoom >= 16) && (labelType == 'realistic_capacity')}
             textSizeUnits='meters'
             textSizeScale={0.25}
             textFontFamily='sans-serif'
